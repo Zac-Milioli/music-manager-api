@@ -30,14 +30,14 @@ class TestMusic:
                 "description": "testDescription",
                 "type": "testType"
             }
-        client.post("/music", json=test_data)
+        
+        index = client.post("/music", json=test_data).json().get("id")
         
         test_new_data = {
                 "name": "testNameNew",
                 "description": "testDescriptionNew",
                 "type": "testTypeNew"
             }
-        index = 1
         response = client.put(f"/music/{index}", json=test_new_data)
 
         date_now = datetime.strftime(datetime.now(), "%d/%m/%Y")
@@ -60,7 +60,31 @@ class TestMusic:
                 "description": "testDescriptionNew",
                 "type": "testTypeNew"
             }
-        index = 10
+        index = -1
         response = client.put(f"/music/{index}", json=test_new_data)
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_delete_music_ok(self, client):
+        test_data = {
+                "name": "testName",
+                "description": "testDescription",
+                "type": "testType"
+            }
+
+        index = client.post("/music", json=test_data).json().get("id")
+
+        date_now = datetime.strftime(datetime.now(), "%d/%m/%Y")
+        test_data['date'] = date_now
+        test_data['id'] = index
+
+        response = client.delete(f"/music/{index}")
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == test_data
+
+    def test_delete_music_not_found(self, client):
+        index = -1
+        response = client.delete(f"/music/{index}")
 
         assert response.status_code == HTTPStatus.NOT_FOUND

@@ -34,6 +34,13 @@ def put_music(music_id: int, q: MusicSchema):
     database[music_id-1] = music_refactor
     return music_refactor
 
+@app.delete("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
+def delete_music(music_id: int):
+    if music_id > len(database) or music_id < 1:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
+    
+    data = database.pop(music_id -1)
+    return data
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
