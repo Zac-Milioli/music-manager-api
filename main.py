@@ -1,7 +1,7 @@
 from schemas import MusicSchema, MusicPublic
 from datetime import datetime
 from http import HTTPStatus
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import uvicorn
 
 app = FastAPI()
@@ -23,6 +23,9 @@ def post_music(q: MusicSchema):
 
 @app.put("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
 def put_music(music_id: int, q: MusicSchema):
+    if music_id > len(database) or music_id < 1:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
+    
     music_refactor = MusicPublic(
             **q.model_dump(),
             date=datetime.strftime(datetime.now(), "%d/%m/%Y"),

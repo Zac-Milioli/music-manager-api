@@ -24,7 +24,7 @@ class TestMusic:
         assert response.status_code == HTTPStatus.CREATED
         assert response.json() == test_data
 
-    def test_put_music(self, client):
+    def test_put_music_ok(self, client):
         test_data = {
                 "name": "testName",
                 "description": "testDescription",
@@ -46,3 +46,21 @@ class TestMusic:
 
         assert response.status_code == HTTPStatus.OK
         assert response.json() == test_new_data
+
+    def test_put_music_not_found(self, client):
+        test_data = {
+                "name": "testName",
+                "description": "testDescription",
+                "type": "testType"
+            }
+        client.post("/music", json=test_data)
+        
+        test_new_data = {
+                "name": "testNameNew",
+                "description": "testDescriptionNew",
+                "type": "testTypeNew"
+            }
+        index = 10
+        response = client.put(f"/music/{index}", json=test_new_data)
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
