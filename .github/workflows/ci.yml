@@ -60,7 +60,7 @@ jobs:
         path: pylint-report.txt
 
     - name: Yield score
-      run: tail -n 1 pylint-report.txt
+      run: tail -n 2 pylint-report.txt
 
   delivery:
       runs-on: ubuntu-latest
