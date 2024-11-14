@@ -10,10 +10,10 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: '3.13'
         cache: 'pip'
@@ -28,7 +28,7 @@ jobs:
         pytest --cov=./ --cov-report=xml
 
     - name: Upload coverage report
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: coverage.xml
@@ -38,10 +38,10 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
         python-version: '3.13'
         cache: 'pip'
@@ -56,7 +56,7 @@ jobs:
         pylint * --output-format=parseable --ignore=requirements.txt,__pycache__,.pytest_cache,README.md,LICENSE,ci.yml --disable=E1102,R0903 > pylint-report.txt || true
 
     - name: Upload pylint report
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v4
       with:
         name: pylint-report
         path: pylint-report.txt
@@ -78,7 +78,7 @@ jobs:
       needs: [ build, linter ]
       if: ${{ success() }}
       steps:
-        - uses: actions/checkout@v5
+        - uses: actions/checkout@v4
           with:
             token: ${{ secrets.CI_MANAGER_SECRET }}
             fetch-depth: 0
