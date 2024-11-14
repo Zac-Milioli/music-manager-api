@@ -64,7 +64,7 @@ jobs:
 
     - name: Check pylint score
       run: |
-        pylint_score=$(tail -n 2 pylint-report.txt | head -n 1 | awk '{print $NF}')
+        pylint_score=$(grep "Your code has been rated at" pylint-report.txt | awk '{print $7}' | cut -d'/' -f1)
         echo "Pylint score: $pylint_score"
         if (( $(echo "$pylint_score < 7.00" | bc -l) )); then
           echo "Pylint score is below 7.00"
