@@ -1,24 +1,31 @@
-from main import app
+"""Definição de fixtures para os testes unitários"""
+
 from fastapi.testclient import TestClient
-from src.models import table_registry
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import pytest
+from src.models import table_registry
+from main import app
 
 
 @pytest.fixture()
-def client():
+def client() -> TestClient:
+    "Define e retorna o cliente de testes do FastAPI"
     return TestClient(app)
 
 
 @pytest.fixture()
 def session():
-    engine = create_engine(f"sqlite:///:memory:")
+    """
+    Define a engine em memória, constrói as
+    tabelas e retorna a sessão, excluindo tudo ao fim
+    """
+    engine = create_engine("sqlite:///:memory:")
     table_registry.metadata.create_all(engine)
 
     # Executa os testes da fixture aqui
-    with Session(engine) as session:
-        yield session
+    with Session(engine) as temp_session:
+        yield temp_session
 
     # Código executado ao encerrar o teste com a fixture
     table_registry.metadata.drop_all(engine)

@@ -1,8 +1,10 @@
-from src.schemas import MusicSchema, MusicPublic
-from datetime import datetime
+"""Arquivo inicializador. Define as rotas e faz as conexões entre as funções"""
+
 from http import HTTPStatus
-from fastapi import FastAPI, HTTPException
+from datetime import datetime
 import uvicorn
+from fastapi import FastAPI, HTTPException
+from src.schemas import MusicSchema, MusicPublic
 
 app = FastAPI()
 database = []
@@ -10,11 +12,13 @@ database = []
 
 @app.get("/music", status_code=HTTPStatus.OK, response_model=list[MusicPublic])
 def get_database():
+    "Endpoint que retorna a base de dados completa"
     return database
 
 
 @app.post("/music", status_code=HTTPStatus.CREATED, response_model=MusicPublic)
 def post_music(q: MusicSchema):
+    "Endpoint referente à criação de Music"
     music_refactor = MusicPublic(
         **q.model_dump(),
         created_at=datetime.strftime(datetime.now(), "%d/%m/%Y"),
@@ -26,6 +30,7 @@ def post_music(q: MusicSchema):
 
 @app.put("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
 def put_music(music_id: int, q: MusicSchema):
+    "Endpoint referente à atualização de Music"
     if music_id > len(database) or music_id < 1:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
 
@@ -40,6 +45,7 @@ def put_music(music_id: int, q: MusicSchema):
 
 @app.delete("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
 def delete_music(music_id: int):
+    "Endpoint referente à exclusão de Music"
     if music_id > len(database) or music_id < 1:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
 

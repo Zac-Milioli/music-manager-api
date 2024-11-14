@@ -1,15 +1,20 @@
-from conftest import client
+"""Classes e funções referentes aos testes unitários da API de Music"""
+
 from http import HTTPStatus
 from datetime import datetime
 
 
 class TestMusic:
+    "Classe e testes para a API"
+
     def test_return_list_database(self, client):
+        "Testa o retorno da base de dados"
         response = client.get("/music")
         assert response.status_code == HTTPStatus.OK
         assert isinstance(response.json(), list)
 
     def test_post_music(self, client):
+        "Testa a criação de uma Music"
         test_data = {
             "name": "testName",
             "description": "testDescription",
@@ -26,6 +31,7 @@ class TestMusic:
         assert response.json() == test_data
 
     def test_put_music_ok(self, client):
+        "Testa a alteração de uma Music"
         test_data = {
             "name": "testName",
             "description": "testDescription",
@@ -49,6 +55,7 @@ class TestMusic:
         assert response.json() == test_new_data
 
     def test_put_music_not_found(self, client):
+        "Testa o erro da alteração de uma Music"
         test_data = {
             "name": "testName",
             "description": "testDescription",
@@ -67,6 +74,7 @@ class TestMusic:
         assert response.status_code == HTTPStatus.NOT_FOUND
 
     def test_delete_music_ok(self, client):
+        "Testa a exclusão de uma Music"
         test_data = {
             "name": "testName",
             "description": "testDescription",
@@ -85,6 +93,7 @@ class TestMusic:
         assert response.json() == test_data
 
     def test_delete_music_not_found(self, client):
+        "Testa a falha da exclusão de uma Music"
         index = -1
         response = client.delete(f"/music/{index}")
 

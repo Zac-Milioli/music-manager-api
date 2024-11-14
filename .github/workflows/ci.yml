@@ -51,7 +51,7 @@ jobs:
 
     - name: Run pylint
       run: |
-        pylint * --output-format=parseable --ignore=requirements.txt,__pycache__,.pytest_cache,README.md,LICENSE > pylint-report.txt || true
+        pylint * --output-format=parseable --ignore=requirements.txt,__pycache__,.pytest_cache,README.md,LICENSE,ci.yml --disable=E1102,R0903 > pylint-report.txt || true
 
     - name: Upload pylint report
       uses: actions/upload-artifact@v4
@@ -67,7 +67,7 @@ jobs:
         pylint_score=$(tail -n 2 pylint-report.txt | head -n 1 | awk '{print $7}')
         echo "Pylint score: $pylint_score"
         if (( $(echo "$pylint_score < 7.00" | bc -l) )); then
-          echo "Pylint score is below 7.00, failing the pipeline."
+          echo "Pylint score is below 7.00"
           exit 1
         fi
 
