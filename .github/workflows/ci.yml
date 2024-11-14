@@ -59,8 +59,8 @@ jobs:
         name: pylint-report
         path: pylint-report.txt
 
-    - name: Yield score
-      run: tail -n 2 pylint-report.txt
+    - name: Yield situation
+      run: echo pylint-report.txt
 
   delivery:
       runs-on: ubuntu-latest
