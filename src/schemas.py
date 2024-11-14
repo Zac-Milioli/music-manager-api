@@ -7,4 +7,4 @@ class MusicSchema(BaseModel):
 
 class MusicPublic(MusicSchema):
     id: int
-    date: str
+    created_at: str

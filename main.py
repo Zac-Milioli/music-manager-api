@@ -15,7 +15,7 @@ def get_database():
 def post_music(q: MusicSchema):
     music_refactor = MusicPublic(
             **q.model_dump(),
-            date=datetime.strftime(datetime.now(), "%d/%m/%Y"),
+            created_at=datetime.strftime(datetime.now(), "%d/%m/%Y"),
             id=len(database)+1
             )
     database.append(music_refactor)
@@ -28,7 +28,7 @@ def put_music(music_id: int, q: MusicSchema):
     
     music_refactor = MusicPublic(
             **q.model_dump(),
-            date=datetime.strftime(datetime.now(), "%d/%m/%Y"),
+            created_at=datetime.strftime(datetime.now(), "%d/%m/%Y"),
             id=music_id
             )
     database[music_id-1] = music_refactor

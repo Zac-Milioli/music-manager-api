@@ -19,7 +19,7 @@ class TestMusic:
         
         response = client.post("/music", json=test_data)
 
-        test_data['date'] = date_now
+        test_data['created_at'] = date_now
         test_data['id'] = index
         assert response.status_code == HTTPStatus.CREATED
         assert response.json() == test_data
@@ -41,7 +41,7 @@ class TestMusic:
         response = client.put(f"/music/{index}", json=test_new_data)
 
         date_now = datetime.strftime(datetime.now(), "%d/%m/%Y")
-        test_new_data['date'] = date_now
+        test_new_data['created_at'] = date_now
         test_new_data['id'] = index
 
         assert response.status_code == HTTPStatus.OK
@@ -75,7 +75,7 @@ class TestMusic:
         index = client.post("/music", json=test_data).json().get("id")
 
         date_now = datetime.strftime(datetime.now(), "%d/%m/%Y")
-        test_data['date'] = date_now
+        test_data['created_at'] = date_now
         test_data['id'] = index
 
         response = client.delete(f"/music/{index}")
