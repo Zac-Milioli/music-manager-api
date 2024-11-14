@@ -1,4 +1,4 @@
-from schemas import MusicSchema, MusicPublic
+from src.schemas import MusicSchema, MusicPublic
 from datetime import datetime
 from http import HTTPStatus
 from fastapi import FastAPI, HTTPException
