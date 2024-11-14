@@ -51,7 +51,7 @@ jobs:
 
     - name: Run pylint
       run: |
-        pylint * --output-format=parseable --ignore=requirements.txt,__pycache__,.pytest_cache > pylint-report.txt || true
+        pylint * --output-format=parseable --ignore=requirements.txt,__pycache__,.pytest_cache,README.md,LICENSE > pylint-report.txt || true
 
     - name: Upload pylint report
       uses: actions/upload-artifact@v4
