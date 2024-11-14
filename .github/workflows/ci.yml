@@ -60,7 +60,7 @@ jobs:
         path: pylint-report.txt
 
     - name: Yield situation
-      run: echo pylint-report.txt
+      run: cat pylint-report.txt
 
   delivery:
       runs-on: ubuntu-latest
