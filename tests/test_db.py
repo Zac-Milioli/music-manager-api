@@ -1,6 +1,5 @@
-from src.models import Music, table_registry
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine, select
+from src.models import Music
+from sqlalchemy import select
 
 class TestDB:
     def test_create_music(self, session):
