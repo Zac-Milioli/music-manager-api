@@ -5,6 +5,13 @@ Possui CI (testes unitários, linter e merge automático na master em caso suces
 
 Python é obrigatório para a utilização deste software.
 
+## Documentação e testes manuais
+Ao executar o sistema, é gerada a documentação automática que pode ser acessada diretamente pelo navegador.
+
+> http://localhost:8000/docs (Permite testar a API)
+
+> http://localhost:8000/redoc (Somente documentação)
+
 ## Instalação dos pacotes necessários
 ```
 pip install -r requirements.txt
@@ -14,12 +21,6 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
-
-## Documentação e testes manuais
-Ao executar o sistema, é gerada a documentação automática que pode ser acessada diretamente pelo navegador.
-
-> http://localhost:8000/docs (Permite testar a API)
-> http://localhost:8000/redoc (Somente documentação)
 
 ### Recomenda-se o uso de um venv. Para tal:
 ```
