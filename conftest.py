@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import pytest
 from src.models import table_registry
-from main import app
+from no_db_main import app
 
 
 @pytest.fixture()
