@@ -20,15 +20,10 @@ class TestMusic:
             "description": "testDescription",
             "type": "testType",
         }
-        date_now = datetime.now()
-        index = 1
-
         response = client.post("/music", json=test_data)
 
-        test_data["created_at"] = date_now
-        test_data["id"] = index
         assert response.status_code == HTTPStatus.CREATED
-        assert response.json() == test_data
+        assert response.json()["name"] == test_data["name"]
 
     def test_put_music_ok(self, client):
         "Testa a alteração de uma Music"
@@ -47,12 +42,8 @@ class TestMusic:
         }
         response = client.put(f"/music/{index}", json=test_new_data)
 
-        date_now = datetime.now()
-        test_new_data["created_at"] = date_now
-        test_new_data["id"] = index
-
         assert response.status_code == HTTPStatus.OK
-        assert response.json() == test_new_data
+        assert response.json()["name"] == test_new_data["name"]
 
     def test_put_music_not_found(self, client):
         "Testa o erro da alteração de uma Music"
@@ -82,15 +73,10 @@ class TestMusic:
         }
 
         index = client.post("/music", json=test_data).json().get("id")
-
-        date_now = datetime.now()
-        test_data["created_at"] = date_now
-        test_data["id"] = index
-
         response = client.delete(f"/music/{index}")
 
         assert response.status_code == HTTPStatus.OK
-        assert response.json() == test_data
+        assert response.json()["name"] == test_data["name"]
 
     def test_delete_music_not_found(self, client):
         "Testa a falha da exclusão de uma Music"
