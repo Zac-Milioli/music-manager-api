@@ -14,9 +14,9 @@ app = FastAPI()
 database = []
 
 @app.get("/music", status_code=HTTPStatus.OK, response_model=list[MusicPublic])
-def get_database(session: Session = Depends(get_session)):
-    "Endpoint que retorna a base de dados completa"
-    musics = session.scalars(select(Music))
+def get_database(limit: int = 15, start_after: int = 0, session: Session = Depends(get_session)):
+    "Endpoint que retorna a base de dados parametrizada"
+    musics = session.scalars(select(Music).limit(limit).offset(start_after))
     return musics
 
 

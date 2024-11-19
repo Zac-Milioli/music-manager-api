@@ -5,9 +5,23 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 import pytest
-from src.models.music_model import table_registry
+from src.models.music_model import table_registry, Music
 from src.utils.database import get_session
+from src.schemas.music_schema import MusicPublic
 from main import app
+
+@pytest.fixture
+def music(session) -> MusicPublic:
+    schema = {
+        "name": "testMusicSchema",
+        "description": "testDescriptionSchema",
+        "type": "testTypeSchema",
+    }
+    new_music = Music(**schema)
+    session.add(new_music)
+    session.commit()
+    session.refresh(new_music)
+    return new_music
 
 @pytest.fixture()
 def client(session):
