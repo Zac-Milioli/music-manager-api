@@ -7,11 +7,10 @@ from sqlalchemy.pool import StaticPool
 import pytest
 from src.models.music_model import table_registry, Music
 from src.utils.database import get_session
-from src.schemas.music_schema import MusicPublic
 from main import app
 
 @pytest.fixture
-def music(session) -> MusicPublic:
+def music(session) -> Music:
     schema = {
         "name": "testMusicSchema",
         "description": "testDescriptionSchema",

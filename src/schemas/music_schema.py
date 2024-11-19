@@ -1,6 +1,6 @@
 """Classes e funções referentes às trocas da API"""
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
@@ -9,6 +9,7 @@ class MusicSchema(BaseModel):
     name: str
     description: str | None = None
     type: str | None = None
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MusicPublic(MusicSchema):

@@ -2,7 +2,8 @@
 
 from http import HTTPStatus
 from datetime import datetime
-from src.schemas.music_schema import MusicPublic
+from src.models.music_model import Music
+from src.schemas.music_schema import MusicPublic, MusicSchema
 
 class TestMusic:
     "Classe e testes para a API"
@@ -13,10 +14,14 @@ class TestMusic:
         assert response.status_code == HTTPStatus.OK
         assert isinstance(response.json(), list)
 
-    def test_get_music_created(self, client, music: MusicPublic):
+    def test_get_music_created(self, client, music: Music):
         "Testa o retorno da base de dados com 1 registro"
-        response = client.get("/music")
-        assert response.json()[0].get("name") == music.name
+        music = MusicPublic.model_validate(music).model_dump()
+
+        response = client.get("/music").json()
+        response[0]["created_at"] = datetime.fromisoformat(response[0]["created_at"])
+
+        assert response[0] == music
 
     def test_post_music(self, client):
         "Testa a criação de uma Music"
@@ -30,19 +35,29 @@ class TestMusic:
         assert response.status_code == HTTPStatus.CREATED
         assert response.json()["name"] == test_data["name"]
 
-    def test_post_music_conflict(self, client, music: MusicPublic):
+    def test_post_music_conflict(self, client, music: Music):
         "Testa a criação de uma Music que já existe"
-        response = client.post("/music", json={"name": music.name})
+        music = MusicSchema.model_validate(music).model_dump()
+        response = client.post("/music", json=music)
 
         assert response.status_code == HTTPStatus.CONFLICT
 
-    def test_put_music_ok(self, client, music: MusicPublic):
+    def test_put_music_ok(self, client, music: Music):
         "Testa a alteração de uma Music"
+        music = MusicPublic.model_validate(music)
         music.name = "testNameNew"
-        response = client.put(f"/music/{music.id}", json={"name": music.name})
+
+        music_schema = MusicSchema(
+            name=music.name,
+            description=music.description,
+            type=music.type
+            ).model_dump()
+
+        response = client.put(f"/music/{music.id}", json=music_schema).json()
+        response["created_at"] = datetime.fromisoformat(response["created_at"])
 
         assert response.status_code == HTTPStatus.OK
-        assert response.json()["name"] == music.name
+        assert response == music.model_dump()
 
     def test_put_music_not_found(self, client):
         "Testa o erro da alteração de uma Music"
@@ -56,12 +71,15 @@ class TestMusic:
 
         assert response.status_code == HTTPStatus.NOT_FOUND
 
-    def test_delete_music_ok(self, client, music: MusicPublic):
+    def test_delete_music_ok(self, client, music: Music):
         "Testa a exclusão de uma Music"
-        response = client.delete(f"/music/{music.id}")
+        music = MusicPublic.model_validate(music)
+        
+        response = client.delete(f"/music/{music.id}").json()
+        response["created_at"] = datetime.fromisoformat(response["created_at"])
 
         assert response.status_code == HTTPStatus.OK
-        assert response.json()["name"] == music.name
+        assert response == music.model_dump()
 
     def test_delete_music_not_found(self, client):
         "Testa a falha da exclusão de uma Music"

@@ -45,7 +45,7 @@ def put_music(music_id: int, q: MusicSchema):
 
     music_refactor = MusicPublic(
         **q.model_dump(),
-        created_at=datetime.strftime(datetime.now(), "%d/%m/%Y"),
+        created_at=datetime.now(),
         id=music_id
     )
     database[music_id - 1] = music_refactor
