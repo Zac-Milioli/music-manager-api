@@ -1,7 +1,7 @@
 """Classes e funções referentes aos testes unitários do banco de dados"""
 
 from sqlalchemy import select
-from models.music_model import Music
+from src.models.music_model import Music
 
 
 class TestDB:

@@ -6,8 +6,8 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from models.music_model import Music
-from schemas.music_schema import MusicSchema, MusicPublic
+from src.models.music_model import Music
+from src.schemas.music_schema import MusicSchema, MusicPublic
 from src.settings import Settings
 
 app = FastAPI()
@@ -32,7 +32,7 @@ def post_music(q: MusicSchema):
         if db_music:
             raise HTTPException(HTTPStatus.CONFLICT, "Music already exists")
 
-        db_music = Music(name=q.name, description=q.description, type=q.type)
+        db_music = Music(**q.model_dump_json())
         session.add(db_music)
         session.commit()
         session.refresh(db_music)

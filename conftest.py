@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import pytest
-from models.music_model import table_registry
+from src.models.music_model import table_registry
 from no_db_main import app
 
 
