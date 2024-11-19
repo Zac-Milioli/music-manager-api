@@ -6,8 +6,8 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
-from src.models import Music
-from src.schemas import MusicSchema, MusicPublic
+from models.music_model import Music
+from schemas.music_schema import MusicSchema, MusicPublic
 from src.settings import Settings
 
 app = FastAPI()

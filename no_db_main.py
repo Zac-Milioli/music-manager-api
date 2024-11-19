@@ -4,7 +4,7 @@ from http import HTTPStatus
 from datetime import datetime
 import uvicorn
 from fastapi import FastAPI, HTTPException
-from src.schemas import MusicSchema, MusicPublic
+from schemas.music_schema import MusicSchema, MusicPublic
 
 app = FastAPI()
 database = []

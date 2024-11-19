@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.settings import Settings
-from src.models import table_registry
+from models.music_model import table_registry
 
 config = context.config
 config.set_main_option("sqlalchemy.url", Settings().DATABASE_URL)
