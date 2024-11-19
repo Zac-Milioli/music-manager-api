@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.settings import Settings
+from src.utils.settings import Settings
 from src.models.music_model import table_registry
 
 config = context.config
@@ -15,6 +15,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = table_registry.metadata
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

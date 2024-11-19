@@ -25,6 +25,17 @@ class TestMusic:
         assert response.status_code == HTTPStatus.CREATED
         assert response.json()["name"] == test_data["name"]
 
+    def test_post_music_conflict(self, client):
+        "Testa a criação de uma Music que já existe"
+        test_data = {
+            "name": "testName"
+        }
+
+        client.post("/music", json=test_data)
+        response = client.post("/music", json=test_data)
+
+        assert response.status_code == HTTPStatus.CONFLICT
+
     def test_put_music_ok(self, client):
         "Testa a alteração de uma Music"
         test_data = {
@@ -32,18 +43,12 @@ class TestMusic:
             "description": "testDescription",
             "type": "testType",
         }
-
         index = client.post("/music", json=test_data).json().get("id")
-
-        test_new_data = {
-            "name": "testNameNew",
-            "description": "testDescriptionNew",
-            "type": "testTypeNew",
-        }
-        response = client.put(f"/music/{index}", json=test_new_data)
+        test_data["name"] = "testNameNew"
+        response = client.put(f"/music/{index}", json=test_data)
 
         assert response.status_code == HTTPStatus.OK
-        assert response.json()["name"] == test_new_data["name"]
+        assert response.json()["name"] == test_data["name"]
 
     def test_put_music_not_found(self, client):
         "Testa o erro da alteração de uma Music"

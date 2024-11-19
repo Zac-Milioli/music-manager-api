@@ -3,41 +3,39 @@
 from http import HTTPStatus
 from datetime import datetime
 import uvicorn
-from fastapi import FastAPI, HTTPException
-from sqlalchemy import create_engine, select
+from fastapi import FastAPI, HTTPException, Depends
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from src.models.music_model import Music
 from src.schemas.music_schema import MusicSchema, MusicPublic
-from src.settings import Settings
+from src.utils.database import get_session
 
 app = FastAPI()
 database = []
 
 @app.get("/music", status_code=HTTPStatus.OK, response_model=list[MusicPublic])
-def get_database():
+def get_database(session: Session = Depends(get_session)):
     "Endpoint que retorna a base de dados completa"
-    return database
+    musics = session.scalars(select(Music))
+    return musics
 
 
 @app.post("/music", status_code=HTTPStatus.CREATED, response_model=MusicPublic)
-def post_music(q: MusicSchema):
+def post_music(q: MusicSchema, session: Session = Depends(get_session)):
     "Endpoint referente à criação de Music"
-    engine = create_engine(Settings().DATABASE_URL)
+    db_music = session.scalar(
+        select(Music).where(Music.name == q.name)
+    )
 
-    with Session(engine) as session:
-        db_music = session.scalar(
-            select(Music).where(Music.name == q.name)
-        )
+    if db_music:
+        raise HTTPException(HTTPStatus.CONFLICT, "Music already exists")
 
-        if db_music:
-            raise HTTPException(HTTPStatus.CONFLICT, "Music already exists")
+    db_music = Music(**q.model_dump())
+    session.add(db_music)
+    session.commit()
+    session.refresh(db_music)
 
-        db_music = Music(**q.model_dump())
-        session.add(db_music)
-        session.commit()
-        session.refresh(db_music)
-
-        return db_music
+    return db_music
 
 @app.put("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
 def put_music(music_id: int, q: MusicSchema):
