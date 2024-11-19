@@ -32,7 +32,7 @@ def post_music(q: MusicSchema):
         if db_music:
             raise HTTPException(HTTPStatus.CONFLICT, "Music already exists")
 
-        db_music = Music(**q.model_dump_json())
+        db_music = Music(**q.model_dump())
         session.add(db_music)
         session.commit()
         session.refresh(db_music)
