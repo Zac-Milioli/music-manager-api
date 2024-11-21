@@ -14,7 +14,7 @@ class TestMusic:
         assert response.status_code == HTTPStatus.OK
         assert isinstance(response.json(), list)
 
-    def test_get_music_created(self, client, music: Music):
+    def test_get_musics_list(self, client, music: Music):
         "Testa o retorno da base de dados com 1 registro"
         music = MusicPublic.model_validate(music).model_dump()
 
@@ -22,6 +22,15 @@ class TestMusic:
         response[0]["created_at"] = datetime.fromisoformat(response[0]["created_at"])
 
         assert response[0] == music
+
+    def test_get_music_specific(self, client, music: Music):
+        "Testa o retorno da base de dados com 1 registro"
+        music = MusicPublic.model_validate(music)
+
+        response = client.get(f"/music/{music.id}").json()
+        response["created_at"] = datetime.fromisoformat(response["created_at"])
+
+        assert response == music.model_dump()
 
     def test_post_music(self, client):
         "Testa a criação de uma Music"

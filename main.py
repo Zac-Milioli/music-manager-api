@@ -22,7 +22,7 @@ def get_database(
     musics = session.scalars(select(Music).limit(limit).offset(start_after))
     return musics
 
-@app.get("/music/{music_id}", status_code=HTTPStatus.FOUND, response_model=MusicPublic)
+@app.get("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
 def get_music(music_id: int, session: Session = Depends(get_session)):
     "Endpoint para busca de uma música específica"
     music_db = session.scalar(select(Music).where(Music.id == music_id))
