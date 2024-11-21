@@ -13,8 +13,11 @@ from src.utils.database import get_session
 app = FastAPI()
 database = []
 
+
 @app.get("/music", status_code=HTTPStatus.OK, response_model=list[MusicPublic])
-def get_database(limit: int = 15, start_after: int = 0, session: Session = Depends(get_session)):
+def get_database(
+    limit: int = 15, start_after: int = 0, session: Session = Depends(get_session)
+):
     "Endpoint que retorna a base de dados parametrizada"
     musics = session.scalars(select(Music).limit(limit).offset(start_after))
     return musics
@@ -23,9 +26,7 @@ def get_database(limit: int = 15, start_after: int = 0, session: Session = Depen
 @app.post("/music", status_code=HTTPStatus.CREATED, response_model=MusicPublic)
 def post_music(q: MusicSchema, session: Session = Depends(get_session)):
     "Endpoint referente à criação de Music"
-    db_music = session.scalar(
-        select(Music).where(Music.name == q.name)
-    )
+    db_music = session.scalar(select(Music).where(Music.name == q.name))
 
     if db_music:
         raise HTTPException(HTTPStatus.CONFLICT, "Music already exists")
@@ -37,6 +38,7 @@ def post_music(q: MusicSchema, session: Session = Depends(get_session)):
 
     return db_music
 
+
 @app.put("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
 def put_music(music_id: int, q: MusicSchema):
     "Endpoint referente à atualização de Music"
@@ -44,9 +46,7 @@ def put_music(music_id: int, q: MusicSchema):
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
 
     music_refactor = MusicPublic(
-        **q.model_dump(),
-        created_at=datetime.now(),
-        id=music_id
+        **q.model_dump(), created_at=datetime.now(), id=music_id
     )
     database[music_id - 1] = music_refactor
     return music_refactor

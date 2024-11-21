@@ -48,10 +48,8 @@ class TestMusic:
         music.name = "testNameNew"
 
         music_schema = MusicSchema(
-            name=music.name,
-            description=music.description,
-            type=music.type
-            ).model_dump()
+            name=music.name, description=music.description, type=music.type
+        ).model_dump()
 
         response = client.put(f"/music/{music.id}", json=music_schema).json()
         response["created_at"] = datetime.fromisoformat(response["created_at"])
@@ -74,7 +72,6 @@ class TestMusic:
     def test_delete_music_ok(self, client, music: Music):
         "Testa a exclusão de uma Music"
         music = MusicPublic.model_validate(music)
-        
         response = client.delete(f"/music/{music.id}").json()
         response["created_at"] = datetime.fromisoformat(response["created_at"])
 

@@ -9,6 +9,7 @@ from src.models.music_model import table_registry, Music
 from src.utils.database import get_session
 from main import app
 
+
 @pytest.fixture
 def music(session) -> Music:
     schema = {
@@ -22,12 +23,14 @@ def music(session) -> Music:
     session.refresh(new_music)
     return new_music
 
+
 @pytest.fixture()
 def client(session):
     "Define e retorna o cliente de testes do FastAPI"
+
     def get_session_override():
         return session
-    
+
     with TestClient(app) as client:
         app.dependency_overrides[get_session] = get_session_override
         yield client
@@ -44,8 +47,8 @@ def session():
     engine = create_engine(
         "sqlite:///:memory:",
         connect_args={"check_same_thread": False},
-        poolclass=StaticPool
-        )
+        poolclass=StaticPool,
+    )
     table_registry.metadata.create_all(engine)
 
     # Executa os testes da fixture aqui
