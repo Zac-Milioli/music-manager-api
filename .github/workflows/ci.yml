@@ -24,8 +24,8 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run tests
-      # env:
-      #   DATABASE_URL: ${{ secrets.DATABASE }}
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE }}
       run: |
         pytest --cov=./ --cov-report=html
 
