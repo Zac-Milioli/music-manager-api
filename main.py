@@ -22,6 +22,14 @@ def get_database(
     musics = session.scalars(select(Music).limit(limit).offset(start_after))
     return musics
 
+@app.get("/music/{music_id}", status_code=HTTPStatus.FOUND, response_model=MusicPublic)
+def get_music(music_id: int, session: Session = Depends(get_session)):
+    "Endpoint para busca de uma música específica"
+    music_db = session.scalar(select(Music).where(Music.id == music_id))
+    if not music_db:
+        raise HTTPException(HTTPStatus.NOT_FOUND, detail="Music not found")
+    
+    return music_db
 
 @app.post("/music", status_code=HTTPStatus.CREATED, response_model=MusicPublic)
 def post_music(q: MusicSchema, session: Session = Depends(get_session)):
@@ -40,27 +48,33 @@ def post_music(q: MusicSchema, session: Session = Depends(get_session)):
 
 
 @app.put("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
-def put_music(music_id: int, q: MusicSchema):
+def put_music(music_id: int, q: MusicSchema, session: Session = Depends(get_session)):
     "Endpoint referente à atualização de Music"
-    if music_id > len(database) or music_id < 1:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
+    music_db = session.scalar(select(Music).where(Music.id == music_id))
+    if not music_db:
+        raise HTTPException(HTTPStatus.NOT_FOUND, detail="Music not found")
 
-    music_refactor = MusicPublic(
-        **q.model_dump(), created_at=datetime.now(), id=music_id
-    )
-    database[music_id - 1] = music_refactor
-    return music_refactor
-
+    music_db.name = q.name
+    music_db.description = q.description
+    music_db.type = q.type
+    
+    session.add(music_db)
+    session.commit()
+    session.refresh(music_db)
+    
+    return music_db
 
 @app.delete("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)
-def delete_music(music_id: int):
+def delete_music(music_id: int, session: Session = Depends(get_session)):
     "Endpoint referente à exclusão de Music"
-    if music_id > len(database) or music_id < 1:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Music not found")
+    music_db = session.scalar(select(Music).where(Music.id == music_id))
+    if not music_db:
+        raise HTTPException(HTTPStatus.NOT_FOUND, detail="Music not found")
 
-    data = database.pop(music_id - 1)
-    return data
+    session.delete(music_db)
+    session.commit()
 
+    return music_db
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

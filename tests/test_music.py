@@ -51,11 +51,12 @@ class TestMusic:
             name=music.name, description=music.description, type=music.type
         ).model_dump()
 
-        response = client.put(f"/music/{music.id}", json=music_schema).json()
-        response["created_at"] = datetime.fromisoformat(response["created_at"])
+        response = client.put(f"/music/{music.id}", json=music_schema)
+        response_json = response.json()
+        response_json["created_at"] = datetime.fromisoformat(response_json["created_at"])
 
         assert response.status_code == HTTPStatus.OK
-        assert response == music.model_dump()
+        assert response_json == music.model_dump()
 
     def test_put_music_not_found(self, client):
         "Testa o erro da alteração de uma Music"
@@ -72,11 +73,12 @@ class TestMusic:
     def test_delete_music_ok(self, client, music: Music):
         "Testa a exclusão de uma Music"
         music = MusicPublic.model_validate(music)
-        response = client.delete(f"/music/{music.id}").json()
-        response["created_at"] = datetime.fromisoformat(response["created_at"])
+        response = client.delete(f"/music/{music.id}")
+        response_json = response.json()
+        response_json["created_at"] = datetime.fromisoformat(response_json["created_at"])
 
         assert response.status_code == HTTPStatus.OK
-        assert response == music.model_dump()
+        assert response_json == music.model_dump()
 
     def test_delete_music_not_found(self, client):
         "Testa a falha da exclusão de uma Music"
