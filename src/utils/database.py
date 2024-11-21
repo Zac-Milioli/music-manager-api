@@ -5,7 +5,12 @@ from sqlalchemy import create_engine
 from src.utils.settings import Settings
 
 
-def get_session(engine = create_engine(Settings().DATABASE_URL)):
+def get_engine():
+    "Cria a engine do ORM"
+    return create_engine(Settings().DATABASE_URL)
+
+
+def get_session():
     "Cria uma sessão para acesso temporário ao banco"
-    with Session(engine) as session:
+    with Session(get_engine()) as session:
         yield session
