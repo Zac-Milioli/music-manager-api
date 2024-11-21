@@ -7,7 +7,7 @@ from src.utils.settings import Settings
 
 def get_engine(): # pragma: no cover
     "Cria a engine do ORM"
-    return create_engine(Settings().DATABASE_URL)
+    return create_engine(Settings().DATABASE)
 
 
 def get_session(): # pragma: no cover
