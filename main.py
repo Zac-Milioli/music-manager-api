@@ -1,7 +1,6 @@
 """Arquivo inicializador. Define as rotas e faz as conexões entre as funções"""
 
 from http import HTTPStatus
-from datetime import datetime
 import uvicorn
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import select
@@ -28,7 +27,7 @@ def get_music(music_id: int, session: Session = Depends(get_session)):
     music_db = session.scalar(select(Music).where(Music.id == music_id))
     if not music_db:
         raise HTTPException(HTTPStatus.NOT_FOUND, detail="Music not found")
-    
+
     return music_db
 
 @app.post("/music", status_code=HTTPStatus.CREATED, response_model=MusicPublic)
@@ -57,11 +56,11 @@ def put_music(music_id: int, q: MusicSchema, session: Session = Depends(get_sess
     music_db.name = q.name
     music_db.description = q.description
     music_db.type = q.type
-    
+
     session.add(music_db)
     session.commit()
     session.refresh(music_db)
-    
+
     return music_db
 
 @app.delete("/music/{music_id}", status_code=HTTPStatus.OK, response_model=MusicPublic)

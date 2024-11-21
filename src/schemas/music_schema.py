@@ -1,7 +1,7 @@
 """Classes e funções referentes às trocas da API"""
 
-from pydantic import BaseModel, ConfigDict
 from datetime import datetime
+from pydantic import BaseModel, ConfigDict
 
 
 class MusicSchema(BaseModel):

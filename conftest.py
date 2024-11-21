@@ -12,6 +12,7 @@ from main import app
 
 @pytest.fixture
 def music(session) -> Music:
+    "Registro manual no banco de dados para testes"
     schema = {
         "name": "testMusicSchema",
         "description": "testDescriptionSchema",
