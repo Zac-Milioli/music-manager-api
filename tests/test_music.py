@@ -5,6 +5,7 @@ from datetime import datetime
 from src.models.music_model import Music
 from src.schemas.music_schema import MusicPublic, MusicSchema
 
+
 class TestMusic:
     "Classe e testes para a API"
 
@@ -62,7 +63,9 @@ class TestMusic:
 
         response = client.put(f"/music/{music.id}", json=music_schema)
         response_json = response.json()
-        response_json["created_at"] = datetime.fromisoformat(response_json["created_at"])
+        response_json["created_at"] = datetime.fromisoformat(
+            response_json["created_at"]
+        )
 
         assert response.status_code == HTTPStatus.OK
         assert response_json == music.model_dump()
@@ -84,7 +87,9 @@ class TestMusic:
         music = MusicPublic.model_validate(music)
         response = client.delete(f"/music/{music.id}")
         response_json = response.json()
-        response_json["created_at"] = datetime.fromisoformat(response_json["created_at"])
+        response_json["created_at"] = datetime.fromisoformat(
+            response_json["created_at"]
+        )
 
         assert response.status_code == HTTPStatus.OK
         assert response_json == music.model_dump()
