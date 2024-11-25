@@ -1,6 +1,6 @@
 FROM python:3.13-slim
 
-WORKDIR app/
+WORKDIR /app
 COPY requirements.txt .
 
 RUN pip install --upgrade pip
@@ -10,4 +10,5 @@ COPY . .
 
 EXPOSE 8000
 
-CMD python main.py
+RUN pytest --cov=./ --cov-report=html
+CMD ["python", "main.py"]
