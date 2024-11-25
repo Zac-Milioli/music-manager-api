@@ -12,25 +12,22 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Cache Docker layers
-      uses: actions/cache@v3
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+        python-version: '3.13'
+        cache: 'pip'
 
-    - name: Build Docker image
-      run: docker build -t my-app .
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Run tests
-      # env:
-      #   DATABASE_URL: ${{ secrets.DATABASE }}
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE }}
       run: |
-        docker run --rm -e DATABASE=${{ secrets.DATABASE }} my-app
+        pytest --cov=./ --cov-report=html
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v4
